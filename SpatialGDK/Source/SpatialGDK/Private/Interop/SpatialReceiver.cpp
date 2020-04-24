@@ -101,6 +101,10 @@ void USpatialReceiver::LeaveCriticalSection()
 		{
 			continue;
 		}
+		if (StaticComponentView->HasAuthority(PendingAddComponent.EntityId, PendingAddComponent.ComponentId))
+		{
+			continue; // Hack to allow servers to change state if they are going to be authoritative
+		}
 		HandleIndividualAddComponent_Internal(PendingAddComponent.EntityId, PendingAddComponent.ComponentId, MoveTemp(PendingAddComponent.Data));
 	}
 
