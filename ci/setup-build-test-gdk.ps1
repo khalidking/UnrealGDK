@@ -148,7 +148,7 @@ Foreach ($test in $tests) {
         Start-Event "test-gdk" "command"
         $engine_binary_path = "$unreal_engine_symlink_dir\Engine\Binaries\Win64\UE4Editor.exe"
         if ($env:BUILD_STATE -eq "DebugGame") {
-            $engine_binary_path = "$unreal_engine_symlink_dir\Engine\Binaries\Win64\UE4Editor-DebugGame.exe"
+            $engine_binary_path = "$unreal_engine_symlink_dir\Engine\Binaries\Win64\UE4Editor-Win64-DebugGame.exe"
         }
         & $PSScriptRoot"\run-tests.ps1" `
             -unreal_editor_path "$engine_binary_path" `
