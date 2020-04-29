@@ -146,8 +146,12 @@ Foreach ($test in $tests) {
     # Only run tests on Windows, as we do not have a linux agent - should not matter
     if ($env:BUILD_PLATFORM -eq "Win64" -And $env:BUILD_TARGET -eq "Editor" -And ($env:BUILD_STATE -eq "Development" -Or $env:BUILD_STATE -eq "DebugGame")) {
         Start-Event "test-gdk" "command"
+        $engine_binary_path = "$unreal_engine_symlink_dir\Engine\Binaries\Win64\UE4Editor.exe"
+        if ($env:BUILD_STATE -eq "DebugGame") {
+            $engine_binary_path = "$unreal_engine_symlink_dir\Engine\Binaries\Win64\UE4Editor-DebugGame.exe"
+        }
         & $PSScriptRoot"\run-tests.ps1" `
-            -unreal_editor_path "$unreal_engine_symlink_dir\Engine\Binaries\Win64\UE4Editor.exe" `
+            -unreal_editor_path "$engine_binary_path" `
             -uproject_path "$build_home\$test_project_name\$test_repo_relative_uproject_path" `
             -test_repo_path "$build_home\$test_project_name" `
             -log_file_path "$PSScriptRoot\$test_project_name\$test_results_dir\tests.log" `
