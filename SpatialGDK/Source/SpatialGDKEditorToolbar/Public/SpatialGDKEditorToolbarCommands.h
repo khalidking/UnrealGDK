@@ -24,6 +24,7 @@ public:
 	TSharedPtr<FUICommandInfo> CreateSpatialGDKSchemaFull;
 	TSharedPtr<FUICommandInfo> DeleteSchemaDatabase;
 	TSharedPtr<FUICommandInfo> CreateSpatialGDKSnapshot;
+	TSharedPtr<FUICommandInfo> StartNative;
 	TSharedPtr<FUICommandInfo> StartNoAutomaticConnection;
 	TSharedPtr<FUICommandInfo> StartLocalSpatialDeployment;
 	TSharedPtr<FUICommandInfo> StartCloudSpatialDeployment;
@@ -39,7 +40,7 @@ public:
 	TSharedPtr<FUICommandInfo> StopSpatialService;
 	TSharedPtr<FUICommandInfo> EnableSpatialNetworking;
 	TSharedPtr<FUICommandInfo> GDKEditorSettings;
-	TSharedPtr<FUICommandInfo> NoAutomaticConnection;
+	TSharedPtr<FUICommandInfo> GDKRuntimeSettings;
 	TSharedPtr<FUICommandInfo> LocalDeployment;
 	TSharedPtr<FUICommandInfo> CloudDeployment;
 };

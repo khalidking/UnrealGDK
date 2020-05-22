@@ -2,22 +2,24 @@
 
 #include "SpatialGDKEditorLayoutDetails.h"
 
+#include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
-#include "DetailCategoryBuilder.h"
 #include "HAL/PlatformFilemanager.h"
 #include "IOSRuntimeSettings.h"
 #include "Misc/App.h"
 #include "Misc/FileHelper.h"
 #include "Misc/MessageDialog.h"
 #include "Serialization/JsonSerializer.h"
-#include "SpatialGDKSettings.h"
+#include "Widgets/Input/SButton.h"
+#include "Widgets/Text/STextBlock.h"
+
+#include "SpatialCommandUtils.h"
 #include "SpatialGDKEditorCommandLineArgsManager.h"
 #include "SpatialGDKEditorSettings.h"
 #include "SpatialGDKServicesConstants.h"
 #include "SpatialGDKServicesModule.h"
-#include "Widgets/Text/STextBlock.h"
-#include "Widgets/Input/SButton.h"
+#include "SpatialGDKSettings.h"
 
 TSharedRef<IDetailCustomization> FSpatialGDKEditorLayoutDetails::MakeInstance()
 {

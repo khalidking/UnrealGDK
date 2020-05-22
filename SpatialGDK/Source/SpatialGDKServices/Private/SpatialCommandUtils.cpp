@@ -1,8 +1,6 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 #include "SpatialCommandUtils.h"
 
-#include "Logging/LogMacros.h"
-#include "Misc/MessageDialog.h"
 #include "Serialization/JsonSerializer.h"
 #include "SpatialGDKServicesConstants.h"
 #include "SpatialGDKServicesModule.h"
@@ -139,12 +137,12 @@ FProcHandle SpatialCommandUtils::LocalWorkerReplace(const FString& ServicePort, 
 		nullptr, nullptr, nullptr);
 }
 
-bool SpatialCommandUtils::GenerateDevAuthToken(bool IsRunningInChina, FString& OutTokenSecret, FString& OutErrorMessage)
+bool SpatialCommandUtils::GenerateDevAuthToken(bool bIsRunningInChina, FString& OutTokenSecret, FString& OutErrorMessage)
 {
 	FString Arguments = TEXT("project auth dev-auth-token create --description=\"Unreal GDK Token\" --json_output");
-	if (IsRunningInChina)
+	if (bIsRunningInChina)
 	{
-		Arguments += TEXT(" --environment cn-production");
+		Arguments += SpatialGDKServicesConstants::ChinaEnvironmentArgument;
 	}
 
 	FString CreateDevAuthTokenResult;
@@ -162,7 +160,7 @@ bool SpatialCommandUtils::GenerateDevAuthToken(bool IsRunningInChina, FString& O
 	bool bFoundNewline = CreateDevAuthTokenResult.TrimEnd().Split(TEXT("\n"), &AuthResult, &DevAuthTokenResult, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 	if (!bFoundNewline || DevAuthTokenResult.IsEmpty())
 	{
-		// This is necessary because depending on whether you are already authenticated against spatial, it will either return two json structs or one.
+		// This is necessary because spatial might return multiple json structs depending on whether you are already authenticated against spatial and are on the latest version of it.
 		DevAuthTokenResult = CreateDevAuthTokenResult;
 	}
 

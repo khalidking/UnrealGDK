@@ -53,8 +53,8 @@ public:
 	void OnShowFailedNotification(const FString& NotificationText);
 	void OnShowTaskStartNotification(const FString& NotificationText);
 
-	FReply OnLaunchDeployment();
-	bool CanLaunchDeployment() const;
+	FReply OnLaunchCloudDeployment();
+	bool CanLaunchCloudDeployment() const;
 
 	bool IsSimulatedPlayersEnabled() const;
 	/** Delegate called when the user either clicks the simulated players checkbox */
@@ -71,12 +71,14 @@ private:
 
 	void VerifyAndStartDeployment();
 
-	void StartNoAutomaticConnectionButtonClicked();
 	void StartLocalSpatialDeploymentButtonClicked();
 	void StopSpatialDeploymentButtonClicked();
 
 	void StartSpatialServiceButtonClicked();
 	void StopSpatialServiceButtonClicked();
+
+	bool StartNativeIsVisible() const;
+	bool StartNativeCanExecute() const;
 
 	bool StartNoAutomaticConnectionIsVisible() const;
 	bool StartNoAutomaticConnectionCanExecute() const;
@@ -100,13 +102,17 @@ private:
 	bool OnIsSpatialNetworkingEnabled() const;
 
 	void GDKEditorSettingsClicked() const;
+	void GDKRuntimeSettingsClicked() const;
+
 	bool IsNoAutomaticConnectionSelected() const;
 	bool IsLocalDeploymentSelected() const;
 	bool IsCloudDeploymentSelected() const;
+
 	bool IsSpatialOSNetFlowConfigurable() const;
-	void NoAutomaticConnectionClicked();
+
 	void LocalDeploymentClicked();
 	void CloudDeploymentClicked();
+
 	bool IsLocalDeploymentIPEditable() const;
 	bool AreCloudDeploymentPropertiesEditable() const;
 
@@ -119,7 +125,7 @@ private:
 
 	void ShowCloudDeploymentDialog();
 	void OpenLaunchConfigurationEditor();
-	void LaunchOrShowDeployment();
+	void LaunchOrShowCloudDeployment();
 
 	/** Delegate to determine the 'Launch Deployment' button enabled state */
 	bool IsDeploymentConfigurationValid() const;
@@ -151,7 +157,8 @@ private:
 
 	FString GetOptionalExposedRuntimeIP() const;
 
-	void RefreshAutoStartLocalDeployment();
+	// This should be called whenever the settings determining whether a local deployment should be automatically started have changed.
+	void OnAutoStartLocalDeploymentChanged();
 
 	TSharedPtr<FUICommandList> PluginCommands;
 	FDelegateHandle OnPropertyChangedDelegateHandle;

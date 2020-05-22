@@ -267,9 +267,7 @@ FReply FSpatialGDKEditorCommandLineArgsManager::GenerateDevAuthToken()
 	}
 	if (USpatialGDKEditorSettings* SpatialGDKEditorSettings = GetMutableDefault<USpatialGDKEditorSettings>())
 	{
-		SpatialGDKEditorSettings->DevelopmentAuthenticationToken = DevAuthToken;
-		SpatialGDKEditorSettings->SaveConfig();
-		SpatialGDKEditorSettings->SetRuntimeDevelopmentAuthenticationToken();
+		SpatialGDKEditorSettings->SetDevelopmentAuthenticationToken(DevAuthToken);
 	}
 	return FReply::Handled();
 }
