@@ -388,7 +388,7 @@ void USpatialNetDriver::CreateAndInitializeCoreClasses()
 	}
 #endif
 
-	if (SpatialSettings->bEnableUnrealLoadBalancer)
+	if (SpatialSettings->bEnableMultiWorker)
 	{
 		CreateAndInitializeLoadBalancingClasses();
 	}
@@ -426,6 +426,7 @@ void USpatialNetDriver::CreateAndInitializeLoadBalancingClasses()
 	{
 		LoadBalanceStrategy = NewObject<ULayeredLBStrategy>(this);
 		LoadBalanceStrategy->Init();
+		LoadBalanceStrategy->SetVirtualWorkerIds(1, LoadBalanceStrategy->GetMinimumRequiredWorkers());
 	}
 
 	VirtualWorkerTranslator = MakeUnique<SpatialVirtualWorkerTranslator>(LoadBalanceStrategy, Connection->GetWorkerId());
@@ -679,15 +680,14 @@ void USpatialNetDriver::OnLevelAddedToWorld(ULevel* LoadedLevel, UWorld* OwningW
 
 	if (OwningWorld != World
 		|| !IsServer()
-		|| GlobalStateManager == nullptr
-		|| USpatialStatics::IsSpatialOffloadingEnabled())
+		|| GlobalStateManager == nullptr)
 	{
 		// If the world isn't our owning world, we are a client, or we loaded the levels
-		// before connecting to Spatial, or we are running with offloading, we return early.
+		// before connecting to Spatial, we return early.
 		return;
 	}
 
-	const bool bLoadBalancingEnabled = GetDefault<USpatialGDKSettings>()->bEnableUnrealLoadBalancer;
+	const bool bLoadBalancingEnabled = GetDefault<USpatialGDKSettings>()->bEnableMultiWorker;
 	const bool bHaveGSMAuthority = StaticComponentView->HasAuthority(SpatialConstants::INITIAL_GLOBAL_STATE_MANAGER_ENTITY_ID, SpatialConstants::STARTUP_ACTOR_MANAGER_COMPONENT_ID);
 
 	if (!bLoadBalancingEnabled && !bHaveGSMAuthority)
@@ -2324,7 +2324,7 @@ void USpatialNetDriver::HandleStartupOpQueueing(const TArray<Worker_OpList*>& In
 
 		if (bIsReadyToStart)
 		{
-			if (GetDefault<USpatialGDKSettings>()->bEnableUnrealLoadBalancer)
+			if (GetDefault<USpatialGDKSettings>()->bEnableMultiWorker)
 			{
 				// We know at this point that we have all the information to set the worker's interest query.
 				Sender->UpdateServerWorkerEntityInterestAndPosition();

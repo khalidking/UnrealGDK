@@ -578,7 +578,7 @@ void FSpatialGDKEditorToolbarModule::VerifyAndStartDeployment()
 		USingleWorkerRuntimeStrategy* DefaultStrategy = USingleWorkerRuntimeStrategy::StaticClass()->GetDefaultObject<USingleWorkerRuntimeStrategy>();
 		UAbstractRuntimeLoadBalancingStrategy* LoadBalancingStrat = DefaultStrategy;
 
-		if (SpatialGDKSettings->bEnableUnrealLoadBalancer
+		if (SpatialGDKSettings->bEnableMultiWorker
 			&& GetLoadBalancingStrategyFromWorldSettings(*EditorWorld, LoadBalancingStrat, LaunchConfigDescription.World.Dimensions))
 		{
 			LoadBalancingStrat->AddToRoot();
