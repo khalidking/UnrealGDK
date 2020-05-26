@@ -41,7 +41,6 @@
 #include "Utils/ErrorCodeRemapping.h"
 #include "Utils/InterestFactory.h"
 #include "Utils/OpUtils.h"
-#include "Utils/SpatialActorGroupManager.h"
 #include "Utils/SpatialDebugger.h"
 #include "Utils/SpatialLatencyTracer.h"
 #include "Utils/SpatialMetrics.h"
@@ -135,8 +134,6 @@ bool USpatialNetDriver::InitBase(bool bInitAsClient, FNetworkNotify* InNotify, c
 		bPersistSpatialConnection = true;
 	}
 
-	ActorGroupManager = GetGameInstance()->ActorGroupManager.Get();
-
 	// Initialize ClassInfoManager here because it needs to load SchemaDatabase.
 	// We shouldn't do that in CreateAndInitializeCoreClasses because it is called
 	// from OnConnectionToSpatialOSSucceeded callback which could be executed with the async
@@ -145,7 +142,7 @@ bool USpatialNetDriver::InitBase(bool bInitAsClient, FNetworkNotify* InNotify, c
 	ClassInfoManager = NewObject<USpatialClassInfoManager>();
 
 	// If it fails to load, don't attempt to connect to spatial.
-	if (!ClassInfoManager->TryInit(this, ActorGroupManager))
+	if (!ClassInfoManager->TryInit(this))
 	{
 		Error = TEXT("Failed to load Spatial SchemaDatabase! Make sure that schema has been generated for your project");
 		return false;
@@ -388,7 +385,7 @@ void USpatialNetDriver::CreateAndInitializeCoreClasses()
 	}
 #endif
 
-	if (SpatialSettings->bEnableMultiWorker)
+	if (GetDefault<USpatialGDKSettings>()->bEnableMultiWorker)
 	{
 		CreateAndInitializeLoadBalancingClasses();
 	}
@@ -834,8 +831,6 @@ void USpatialNetDriver::BeginDestroy()
 		GDKServices->GetLocalDeploymentManager()->OnDeploymentStart.Remove(SpatialDeploymentStartHandle);
 	}
 #endif
-
-	ActorGroupManager = nullptr;
 }
 
 void USpatialNetDriver::PostInitProperties()
